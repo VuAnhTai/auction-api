@@ -1,16 +1,18 @@
-## Remi Backend
+## auction Backend
 
-- Youtube Video Sharing App
+- Online Auction App
 
 ## Description
 
-- Purpose: This project is to build a video sharing app like Youtube.
-- Overview: This project is built with NestJS, PostgreSQL, TypeORM, and Docker.
+- Purpose: This project is to build an online auction system.
+- Overview: This project is built with NextJS, ReactJS, TailwindCSS, SocketIO, and Cypress.
 - Key Feature:
   - User can register, login, logout, and update profile.
-  - User can share video from Youtube by providing video link.
-  - User can like, dislike, comment, and reply to a video.
-  - Notification when someone shares a video.
+  - Create a new item.
+  - Get the list of completed/ongoing bid items.
+  - Bid on an item.
+  - Can bid in each 5s and for published items (each user).
+  - After bid time. fail auction user’s money need to be payback.
 
 ## Prerequisites
 
@@ -34,7 +36,7 @@ docker-compose up -d
 **docker**:
 
 ```bash
-docker run -d  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password123 -e POSTGRES_DB=remi -p 5432:5432 --name docker-postgres postgres
+docker run -d  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password123 -e POSTGRES_DB=auction -p 5432:5432 --name docker-postgres postgres
 ```
 
 **homebrew**:
@@ -48,7 +50,7 @@ Docker makes things easy because you can always tear down the container or stop 
 once you have postgres running locally you need to make sure that you have a database created for the app to use. You can do this by running the following command:
 
 ```bash
-createdb remi
+createdb auction
 ```
 
 ### Setup .env

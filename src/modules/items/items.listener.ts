@@ -5,28 +5,27 @@ import {
   InsertEvent,
   UpdateEvent,
 } from 'typeorm';
-import { SharedUrl } from './sharedUrl.entity';
-import { ClsService } from 'nestjs-cls';
+import { Item } from './item.entity';
 import { KEY_CLS } from '@/common/constants';
-
+import { ClsService } from 'nestjs-cls';
 @EventSubscriber()
-export class SharedUrlSubscriber implements EntitySubscriberInterface<SharedUrl> {
+export class ItemSubscriber implements EntitySubscriberInterface<Item> {
   constructor(dataSource: DataSource, private readonly cls: ClsService) {
     dataSource.subscribers.push(this);
   }
   listenTo() {
-    return SharedUrl;
+    return Item;
   }
-  beforeInsert(event: InsertEvent<SharedUrl>) {
+  beforeInsert(event: InsertEvent<Item>) {
     const user = this.cls.get(KEY_CLS.USER);
     event.entity.createdBy = user.sub;
-    event.entity.user = {
+    event.entity.owner = {
       id: user.sub,
       email: user.email,
     };
   }
 
-  beforeUpdate(event: UpdateEvent<SharedUrl>) {
+  beforeUpdate(event: UpdateEvent<Item>) {
     event.entity.updatedBy = this.cls.get(KEY_CLS.USER).sub;
   }
 }

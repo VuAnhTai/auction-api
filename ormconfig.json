@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "postgres",
   "password": "password123",
-  "database": "remi",
+  "database": "auction",
   "entities": ["src/**/*.entity{.ts,.js}"],
   "migrations": ["src/migrations/*{.ts,.js}"],
   "cli": {

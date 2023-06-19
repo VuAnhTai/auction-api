@@ -5,6 +5,6 @@ export default registerAs('postgres', () => ({
   port: 5432,
   username: 'postgres',
   password: 'password123',
-  database: 'remi',
+  database: 'auction',
   certificate: '',
 }));

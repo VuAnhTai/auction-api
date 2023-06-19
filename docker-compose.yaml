@@ -3,15 +3,15 @@ version: '3.1'
 services:
   backend:
     build: ./
-    container_name: remi_api
+    container_name: auction_api
     environment:
       - PORT=4000
       - DB_TYPE=postgres
-      - DB_HOST=remi_db
+      - DB_HOST=auction_db
       - DB_PORT=5432
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
-      - DB_DATABASE=remi
+      - DB_DATABASE=auction
       - JWT_EXPIRY_TIME=30d
       - JWT_SECRET=ba7b0fda2d6ca649ed5ce1f6cd47da2e7609c3915944608b35d79d5450fca62a8526b2e0e858d6a5
       - SECRET_KEY=54811fc8e813283936bfd9255c1e8c0e278ea858
@@ -20,19 +20,19 @@ services:
     depends_on:
       - db
     networks:
-      - remi-network
+      - auction-network
   db:
     image: postgres:13.1-alpine
-    container_name: remi_db
+    container_name: auction_db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=remi
+      - POSTGRES_DB=auction
     ports:
       - 5432:5432
     networks:
-      - remi-network
+      - auction-network
 
 networks:
-  remi-network:
+  auction-network:
     driver: bridge

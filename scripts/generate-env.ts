@@ -12,7 +12,7 @@ const envMap = {
   DB_PORT: '5432',
   DB_USERNAME: 'postgres',
   DB_PASSWORD: 'password123',
-  DB_DATABASE: 'remi',
+  DB_DATABASE: 'auction',
   POSTGRES_SSL_CERT: '',
   //JWT
   JWT_EXPIRY_TIME: '30d',
