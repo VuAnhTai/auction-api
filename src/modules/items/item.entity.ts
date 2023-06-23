@@ -33,9 +33,6 @@ export class Item extends Base {
   @Column({ default: TypeEnum.DRAFT })
   type: TypeEnum;
 
-  @Column({ nullable: true })
-  ownerId: number;
-
   @ManyToOne(() => User, user => user.items)
   owner: Partial<User>;
 }

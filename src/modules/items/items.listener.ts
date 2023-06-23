@@ -18,9 +18,9 @@ export class ItemSubscriber implements EntitySubscriberInterface<Item> {
   }
   beforeInsert(event: InsertEvent<Item>) {
     const user = this.cls.get(KEY_CLS.USER);
-    event.entity.createdBy = user.sub;
+    event.entity.createdBy = user.id;
     event.entity.owner = {
-      id: user.sub,
+      id: user.id,
       email: user.email,
     };
   }

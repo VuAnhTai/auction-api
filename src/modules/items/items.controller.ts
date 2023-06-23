@@ -48,6 +48,7 @@ export class ItemsController {
   @UseGuards(AuthGuard)
   @Patch(':id/bid')
   async bid(@Req() req) {
-    return await this.itemsService.bid(req.params.id, req.body);
+    const { user } = req;
+    return await this.itemsService.bid(req.params.id, req.body, user);
   }
 }

@@ -7,6 +7,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WebSocketExceptionFilter } from '@/filters/ws-exception.filter';
+import { OnEvent } from '@nestjs/event-emitter';
+import { EVENT } from '@/common/constants';
 
 @WebSocketGateway({
   cors: {
@@ -29,5 +31,15 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   handleDisconnect(client: Socket) {
     console.log(`Client ${client.id} disconnected.`);
+  }
+
+  @OnEvent(EVENT.BID.CREATED)
+  handleBid(payload: any) {
+    console.log(EVENT.BID.CREATED, payload);
+  }
+
+  @OnEvent(EVENT.BID.COMPLETED)
+  handleBidCompleted(payload: any) {
+    console.log(EVENT.BID.COMPLETED, payload);
   }
 }

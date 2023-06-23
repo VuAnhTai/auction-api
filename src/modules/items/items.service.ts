@@ -1,21 +1,21 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, LessThan, MoreThan, Repository } from 'typeorm';
 import { Item } from './item.entity';
 import { StatusEnum, TypeEnum, TypeFilter } from '../../common/enums';
 import { CacheService } from '@/providers/redis/redis.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EVENT } from '@/common/constants';
 
 @Injectable()
 export class ItemsService {
   constructor(
     @InjectRepository(Item)
     private readonly itemRepository: Repository<Item>,
-    private readonly cacheService: CacheService
+    private readonly cacheService: CacheService,
+    private schedulerRegistry: SchedulerRegistry,
+    private eventEmitter: EventEmitter2
   ) {}
 
   async findAll(type: TypeFilter): Promise<Item[]> {
@@ -57,6 +57,13 @@ export class ItemsService {
       throw new NotFoundException('Item not found');
     }
 
+    // using scheduler to update status of item
+    const timeout = setTimeout(() => {
+      this.completeItem(item.id);
+    }, item.duration * 1000);
+
+    this.schedulerRegistry.addTimeout(`item:${id}`, timeout);
+
     return this.itemRepository.update(id, {
       type: TypeEnum.PUBLISHED,
       startDate: new Date(),
@@ -64,13 +71,22 @@ export class ItemsService {
     });
   }
 
-  async bid(id: number, { amount }: { amount: number }): Promise<any> {
+  async completeItem(id: number): Promise<any> {
+    this.eventEmitter.emit(EVENT.BID.CREATED, {
+      itemId: id,
+    });
+
+    return this.itemRepository.update(id, {
+      type: TypeEnum.COMPLETED,
+    });
+  }
+
+  async bid(id: number, { amount }: { amount: number }, user: any): Promise<any> {
     // using redis to check highest bid and update current price
     // prevent race condition
     const key = `item:${id}:highestBid`;
     await this.cacheService.watch(key);
     const highestBid = +(await this.cacheService.get(key));
-    console.log(highestBid, amount);
     if (highestBid && highestBid >= amount) {
       throw new InternalServerErrorException('Current price must be higher than current price');
     }
@@ -95,8 +111,15 @@ export class ItemsService {
       throw new InternalServerErrorException('Current price must be higher than current price');
     }
 
+    this.eventEmitter.emit(EVENT.BID.CREATED, {
+      itemId: id,
+      userId: user.id,
+      amount,
+    });
+
     return this.itemRepository.update(id, {
       currentPrice: amount,
+      owner: user,
     });
   }
 }

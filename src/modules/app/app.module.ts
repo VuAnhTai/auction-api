@@ -11,6 +11,7 @@ import { EventsModule } from '../events/events.module';
 import { AppController } from './app.controller';
 import { ItemsModule } from '../items/items.module';
 import { RedisCacheModule } from '../redis/redis.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RedisCacheModule } from '../redis/redis.module';
     EventEmitterModule.forRoot(),
     EventsModule,
     RedisCacheModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [
