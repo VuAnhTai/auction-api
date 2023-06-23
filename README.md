@@ -5,14 +5,20 @@
 ## Description
 
 - Purpose: This project is to build an online auction system.
-- Overview: This project is built with NextJS, ReactJS, TailwindCSS, SocketIO, and Cypress.
+- Overview: This project is built with NestJS, PostgreSQL, Redis, Docker, and deployed on EC2.
 - Key Feature:
   - User can register, login, logout, and update profile.
+    - Using JWT to handle author and authen
+    - Create AuthGuard to handle authentication
   - Create a new item.
   - Get the list of completed/ongoing bid items.
   - Bid on an item.
+    - Using Event to handle after bid: Add history
+    - Using Redis to check race condition, increase performance
   - Can bid in each 5s and for publisheded items (each user).
+    - Using BidGuard to handle this case
   - After bid time. fail auction user’s money need to be payback.
+    - Using Event to handle this case
 
 ## Prerequisites
 
