@@ -9,22 +9,22 @@ import * as path from 'path';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const sslConfig = configService.get<string>('postgres.certificate');
+        const sslConfig = configService.get<string>('database.certificate');
         const root = path.resolve(__dirname, '..', '..');
         return {
           type: 'postgres',
-          host: configService.get('postgres.host'),
-          port: configService.get<number>('postgres.port'),
-          username: configService.get('postgres.username'),
-          password: configService.get('postgres.password'),
-          database: configService.get('postgres.database'),
+          host: configService.get('database.host'),
+          port: configService.get<number>('database.port'),
+          username: configService.get('database.username'),
+          password: configService.get('database.password'),
+          database: configService.get('database.database'),
           timezone: 'UTC',
           entities: [root + '/modules/*/*.entity{.ts,.js}'],
           synchronize: true,
           ssl: sslConfig
             ? {
                 ca: Buffer.from(
-                  configService.get<string>('postgres.certificate'),
+                  configService.get<string>('database.certificate'),
                   'base64'
                 ).toString('ascii'),
               }

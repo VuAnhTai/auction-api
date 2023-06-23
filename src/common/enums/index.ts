@@ -10,6 +10,7 @@ export enum TypeFilter {
 }
 
 export enum TypeEnum {
-  PUBLISH = 'publish',
+  PUBLISHED = 'published',
   DRAFT = 'draft',
+  COMPLETED = 'completed',
 }

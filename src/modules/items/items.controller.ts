@@ -41,7 +41,7 @@ export class ItemsController {
   @UseGuards(AuthGuard)
   @Patch(':id/publish')
   async publicItem(@Req() req) {
-    return await this.itemsService.publishItem(req.params.id);
+    return await this.itemsService.publishedItem(req.params.id);
   }
 
   @UseGuards(BidGuard)

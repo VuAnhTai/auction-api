@@ -11,7 +11,7 @@
   - Create a new item.
   - Get the list of completed/ongoing bid items.
   - Bid on an item.
-  - Can bid in each 5s and for published items (each user).
+  - Can bid in each 5s and for publisheded items (each user).
   - After bid time. fail auction user’s money need to be payback.
 
 ## Prerequisites

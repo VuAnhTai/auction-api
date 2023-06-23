@@ -15,6 +15,11 @@ services:
       - JWT_EXPIRY_TIME=30d
       - JWT_SECRET=ba7b0fda2d6ca649ed5ce1f6cd47da2e7609c3915944608b35d79d5450fca62a8526b2e0e858d6a5
       - SECRET_KEY=54811fc8e813283936bfd9255c1e8c0e278ea858
+      - REDIS_HOST=auction_redis
+      - REDIS_NAME=auction
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - REDIS_DB=0
     ports:
       - 4000:4000
     depends_on:
@@ -32,7 +37,13 @@ services:
       - 5432:5432
     networks:
       - auction-network
-
+  redis:
+    image: redis:6.0.9-alpine
+    container_name: auction_redis
+    ports:
+      - 6379:6379
+    networks:
+      - auction-network
 networks:
   auction-network:
     driver: bridge

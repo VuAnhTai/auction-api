@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import appConfig from './app.config.mock';
 import authConfig from './auth.config.mock';
 import databaseConfig from './database.config.mock';
+import cacheConfig from './cache.config.mock';
 
 const validationSchema = Joi.object({
   // App
@@ -23,12 +24,18 @@ const validationSchema = Joi.object({
   // Auth
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRY_TIME: Joi.string().required(),
+
+  // Cache
+  REDIS_HOST: Joi.string().required(),
+  REDIS_NAME: Joi.string().required(),
+  REDIS_PORT: Joi.number().default(6379),
+  REDIS_PASSWORD: Joi.string().allow(''),
 });
 
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      load: [appConfig, authConfig, databaseConfig],
+      load: [appConfig, authConfig, databaseConfig, cacheConfig],
       validationSchema: validationSchema,
     }),
   ],

@@ -38,4 +38,9 @@ export class UsersService {
     const user = await this.userRepository.findOne({ where: { id } });
     return user.amount;
   }
+
+  async getProfile(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    return user;
+  }
 }

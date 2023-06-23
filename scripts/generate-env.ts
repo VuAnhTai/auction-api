@@ -16,6 +16,12 @@ const envMap = {
   POSTGRES_SSL_CERT: '',
   //JWT
   JWT_EXPIRY_TIME: '30d',
+  //Cache
+  REDIS_HOST: 'localhost',
+  REDIS_NAME: 'auction',
+  REDIS_PORT: '6379',
+  REDIS_PASSWORD: '',
+  REDIS_DB: '0',
 };
 
 const main = async () => {

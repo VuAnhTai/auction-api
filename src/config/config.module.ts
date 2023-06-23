@@ -5,7 +5,9 @@ import * as Joi from 'joi';
 import appConfig from './app.config';
 import authConfig from './auth.config';
 import databaseConfig from './database.config';
+
 import { EnvType } from './app.enum';
+import redisConfig from './redis.config';
 
 const validationSchema = Joi.object({
   // App
@@ -26,14 +28,29 @@ const validationSchema = Joi.object({
   // Auth
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRY_TIME: Joi.string().required(),
+
+  // Cache
+  REDIS_HOST: Joi.string().required(),
+  REDIS_NAME: Joi.string().required(),
+  REDIS_PORT: Joi.number().default(6379),
+  REDIS_PASSWORD: Joi.string().allow(''),
+  REDIS_DB: Joi.number().default(0),
 });
 
 @Module({
   imports: [
     NestConfigModule.forRoot({
-      load: [appConfig, authConfig, databaseConfig],
+      load: [appConfig, authConfig, databaseConfig, redisConfig],
       validationSchema: validationSchema,
     }),
   ],
 })
-export class ConfigModule {}
+export class ConfigModule {
+  static forRoot():
+    | import('@nestjs/common').Type<any>
+    | import('@nestjs/common').DynamicModule
+    | Promise<import('@nestjs/common').DynamicModule>
+    | import('@nestjs/common').ForwardReference<any> {
+    throw new Error('Method not implemented.');
+  }
+}

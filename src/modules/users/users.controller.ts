@@ -1,10 +1,31 @@
-import { Body, Controller, HttpException, HttpStatus, Patch, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from 'src/modules/auth/guard/auth.guard';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  async getProfile(@Req() req) {
+    const { user } = req;
+    const userProfile = await this.userService.getProfile(user.id);
+
+    return {
+      id: userProfile.id,
+      email: userProfile.email,
+      amount: userProfile.amount,
+    };
+  }
 
   @UseGuards(AuthGuard)
   @Patch('deposit')
