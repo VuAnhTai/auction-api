@@ -32,14 +32,4 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   handleDisconnect(client: Socket) {
     console.log(`Client ${client.id} disconnected.`);
   }
-
-  @OnEvent(EVENT.BID.CREATED)
-  handleBid(payload: any) {
-    console.log(EVENT.BID.CREATED, payload);
-  }
-
-  @OnEvent(EVENT.BID.COMPLETED)
-  handleBidCompleted(payload: any) {
-    console.log(EVENT.BID.COMPLETED, payload);
-  }
 }

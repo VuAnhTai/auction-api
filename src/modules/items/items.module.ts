@@ -13,6 +13,5 @@ import { CacheService } from '@/providers/redis/redis.service';
   imports: [AuthModule, TypeOrmModule.forFeature([Item])],
   controllers: [ItemsController],
   providers: [ItemsService, BidGuard, ItemSubscriber, CacheService],
-  exports: [BidGuard],
 })
 export class ItemsModule {}

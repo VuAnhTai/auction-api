@@ -12,6 +12,7 @@ import { AppController } from './app.controller';
 import { ItemsModule } from '../items/items.module';
 import { RedisCacheModule } from '../redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HistoriesModule } from '../histories/histories.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     UsersModule,
     AuthModule,
     ItemsModule,
+    HistoriesModule,
     ConfigModule,
     ClsModule.forRoot({
       global: true,

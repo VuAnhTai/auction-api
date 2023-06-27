@@ -10,6 +10,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from 'src/modules/auth/guard/auth.guard';
 import { UsersService } from './users.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { EVENT } from '@/common/constants';
+import { UserUpdateAmount } from '@/common/types/user';
 
 @Controller('users')
 export class UsersController {
@@ -46,5 +49,15 @@ export class UsersController {
         amount: updatedUser.amount,
       },
     };
+  }
+
+  @OnEvent(EVENT.USER.UPDATE_AMOUNT)
+  handleUserUpdateAmount(payload: UserUpdateAmount) {
+    this.userService.updateAmount(payload);
+  }
+
+  @OnEvent(EVENT.USER.RESTORE_AMOUNT)
+  handleUserRestoreAmount(payload: UserUpdateAmount) {
+    this.userService.restoreAmount(payload);
   }
 }

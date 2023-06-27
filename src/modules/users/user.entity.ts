@@ -10,6 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Item } from '@/modules/items/item.entity';
+import { History } from '@/modules/histories/history.entity';
 
 @Entity()
 @Unique(['email'])
@@ -47,4 +48,7 @@ export class User {
 
   @OneToMany(() => Item, item => item.owner)
   items: Item[];
+
+  @OneToMany(() => History, history => history.user)
+  histories: History[];
 }

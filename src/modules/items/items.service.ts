@@ -72,9 +72,8 @@ export class ItemsService {
   }
 
   async completeItem(id: number): Promise<any> {
-    this.eventEmitter.emit(EVENT.BID.CREATED, {
-      itemId: id,
-    });
+    const item = await this.itemRepository.findOne({ where: { id }, relations: ['owner'] });
+    this.eventEmitter.emit(EVENT.BID.CREATED, item);
 
     return this.itemRepository.update(id, {
       type: TypeEnum.COMPLETED,
@@ -111,15 +110,17 @@ export class ItemsService {
       throw new InternalServerErrorException('Current price must be higher than current price');
     }
 
-    this.eventEmitter.emit(EVENT.BID.CREATED, {
-      itemId: id,
+    const updateItem = await this.itemRepository.update(id, {
+      currentPrice: amount,
+      owner: user,
+    });
+
+    this.eventEmitter.emit(EVENT.USER.UPDATE_AMOUNT, {
+      item: updateItem,
       userId: user.id,
       amount,
     });
 
-    return this.itemRepository.update(id, {
-      currentPrice: amount,
-      owner: user,
-    });
+    return;
   }
 }

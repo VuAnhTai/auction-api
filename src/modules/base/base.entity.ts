@@ -7,7 +7,7 @@ export class Base {
   @UpdateDateColumn()
   udpatetAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   createdBy: string;
 
   @Column({ nullable: true })

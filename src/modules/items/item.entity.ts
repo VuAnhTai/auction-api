@@ -3,6 +3,7 @@ import { StatusEnum, TypeEnum } from '@/common/enums';
 import { ManyToOne } from 'typeorm';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Base } from '../base/base.entity';
+import { History } from '../histories/history.entity';
 
 @Entity()
 export class Item extends Base {
@@ -35,4 +36,7 @@ export class Item extends Base {
 
   @ManyToOne(() => User, user => user.items)
   owner: Partial<User>;
+
+  @ManyToOne(() => History, history => history.item)
+  histories: History[];
 }
