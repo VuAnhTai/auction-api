@@ -8,12 +8,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/modules/auth/guard/auth.guard';
+import { AuthGuard } from '@/modules/auth/guard/auth.guard';
 import { UsersService } from './users.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { EVENT } from '@/common/constants';
 import { UserUpdateAmount } from '@/common/types/user';
-import { Item } from '../items/item.entity';
 
 @Controller('users')
 export class UsersController {

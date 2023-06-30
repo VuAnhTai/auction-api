@@ -1,4 +1,4 @@
-import { User } from 'src/modules/users/user.entity';
+import { User } from '@/modules/users/user.entity';
 import { StatusEnum, TypeEnum } from '@/common/enums';
 import { ManyToOne } from 'typeorm';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
