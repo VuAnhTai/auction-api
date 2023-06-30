@@ -46,6 +46,9 @@ export class ItemsService {
           id: true,
           email: true,
         },
+        createdAt: true,
+        createdBy: true,
+        updatedBy: true,
       },
     });
   }

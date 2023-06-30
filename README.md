@@ -1,6 +1,6 @@
 ## auction Backend
 
-- Online Auction App
+- Online Auction App Backend (https://api.vat-info.online)
 
 ## Description
 
@@ -28,6 +28,8 @@
 - Docker >= 20.10.7
 - PostgreSQL >= 13
 - Redis >= 6.0.9
+- NESTJS >= 8.0.0
+- TYPEORM >= 0.2.34
 
 We use framework NESTJS
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
