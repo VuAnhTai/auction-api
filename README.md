@@ -23,8 +23,9 @@
 ## Prerequisites
 
 - Node >= 16
-- Docker
-- PostgreSQL
+- Docker >= 20.10.7
+- PostgreSQL >= 13
+- Redis >= 6.0.9
 
 We use framework NESTJS
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -57,6 +58,20 @@ once you have postgres running locally you need to make sure that you have a dat
 
 ```bash
 createdb auction
+```
+
+### Install redis
+
+**docker**:
+
+```bash
+docker run -d -p 6379:6379 --name docker-redis redis
+```
+
+**homebrew**:
+
+```bash
+brew install redis
 ```
 
 ### Setup .env
