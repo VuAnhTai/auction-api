@@ -1,9 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import ThrottleUtil from 'src/common/utils/throttle.util';
+import { RateLimiterService } from '@/modules/base/rateLimit.service';
+import { CanActivate, ExecutionContext, HttpException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BidGuard implements CanActivate {
-  private readonly throttleUtil = new ThrottleUtil(10000);
+  rateLimiterService: RateLimiterService;
+  constructor() {
+    this.rateLimiterService = new RateLimiterService(10000);
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
@@ -12,8 +15,12 @@ export class BidGuard implements CanActivate {
 
     // Check if user has already bid on item within the last 5 seconds
     const key = `${user.id}-${itemId}`;
-    console.log(key);
-    const canBid = await this.throttleUtil.tryAcquire(key);
-    return canBid;
+    const allowed = this.rateLimiterService.checkRateLimit(key);
+
+    if (!allowed) {
+      throw new HttpException('Rate limit exceeded', 429);
+    }
+
+    return allowed;
   }
 }

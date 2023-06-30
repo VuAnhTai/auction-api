@@ -68,7 +68,6 @@ export class UsersService {
       oldAmount = history.amount || 0;
     }
 
-    console.log(oldAmount);
     user.amount = user.amount - +amount + oldAmount;
 
     const result = await this.userRepository.save(user);

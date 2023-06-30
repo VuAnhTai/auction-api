@@ -57,7 +57,5 @@ export class HistoriesService {
       amount: item.currentPrice,
       item,
     });
-
-    console.log(historiesLatestForEachUserInItem);
   }
 }

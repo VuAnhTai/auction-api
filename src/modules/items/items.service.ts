@@ -120,6 +120,10 @@ export class ItemsService {
     }
 
     if (itemDB.endDate < new Date()) {
+      if (itemDB.type === TypeEnum.PUBLISHED) {
+        await this.completeItem(id);
+      }
+
       throw new InternalServerErrorException('Item is expired');
     }
 
