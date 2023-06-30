@@ -12,10 +12,12 @@
     - Create AuthGuard to handle authentication
   - Create a new item.
   - Get the list of completed/ongoing bid items.
+  - Publish Item
+    - Handle the timeout for the auction to automatically process when it's done
   - Bid on an item.
     - Using Event to handle after bid: Add history
     - Using Redis to check race condition, increase performance
-  - Can bid in each 5s and for publisheded items (each user).
+  - Can bid in each 5s and for published items (each user).
     - Using BidGuard to handle this case
   - After bid time. fail auction user’s money need to be payback.
     - Using Event to handle this case
