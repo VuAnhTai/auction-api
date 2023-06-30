@@ -52,10 +52,12 @@ export class HistoriesService {
       });
     });
 
-    this.eventEmitter.emit(EVENT.USER.RESTORE_AMOUNT, {
-      userId: item.createdBy,
-      amount: item.currentPrice,
-      item,
-    });
+    if (item.owner.id !== item.createdBy) {
+      this.eventEmitter.emit(EVENT.USER.RESTORE_AMOUNT, {
+        userId: item.createdBy,
+        amount: item.currentPrice,
+        item,
+      });
+    }
   }
 }
