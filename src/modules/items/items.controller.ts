@@ -2,10 +2,14 @@ import { Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { AuthGuard } from '@/modules/auth/guard/auth.guard';
 import { BidGuard } from './guard/bid.guard';
+import { UsersService } from '../users/users.service';
 
 @Controller('items')
 export class ItemsController {
-  constructor(private readonly itemsService: ItemsService) {}
+  constructor(
+    private readonly itemsService: ItemsService,
+    private readonly usersService: UsersService
+  ) {}
 
   @UseGuards(AuthGuard)
   @Get('')
@@ -49,6 +53,7 @@ export class ItemsController {
   @Patch(':id/bid')
   async bid(@Req() req) {
     const { user } = req;
+    await this.usersService.checkBalance(user.id, req.body.amount);
     return await this.itemsService.bid(req.params.id, req.body, user);
   }
 }

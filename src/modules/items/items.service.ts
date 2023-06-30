@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, LessThan, MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Item } from './item.entity';
 import { StatusEnum, TypeEnum, TypeFilter } from '../../common/enums';
 import { CacheService } from '@/providers/redis/redis.service';
@@ -19,19 +19,35 @@ export class ItemsService {
   ) {}
 
   async findAll(type: TypeFilter): Promise<Item[]> {
+    let where = {};
     if (type === TypeFilter.COMPLETED) {
-      return this.itemRepository.find({
-        where: { endDate: LessThan(new Date()) },
-      });
+      where = { type: TypeEnum.COMPLETED };
     }
 
     if (type === TypeFilter.ONGOING) {
-      return this.itemRepository.find({
-        where: [{ endDate: MoreThan(new Date()) }, { endDate: IsNull() }],
-      });
+      where = { type: TypeEnum.PUBLISHED };
     }
 
-    return await this.itemRepository.find();
+    return await this.itemRepository.find({
+      where,
+      order: { id: 'DESC' },
+      relations: ['owner'],
+      select: {
+        id: true,
+        name: true,
+        startPrice: true,
+        currentPrice: true,
+        startDate: true,
+        endDate: true,
+        duration: true,
+        status: true,
+        type: true,
+        owner: {
+          id: true,
+          email: true,
+        },
+      },
+    });
   }
 
   async findOne(id: number): Promise<Item> {
@@ -73,7 +89,7 @@ export class ItemsService {
 
   async completeItem(id: number): Promise<any> {
     const item = await this.itemRepository.findOne({ where: { id }, relations: ['owner'] });
-    this.eventEmitter.emit(EVENT.BID.CREATED, item);
+    this.eventEmitter.emit(EVENT.BID.COMPLETED, item);
 
     return this.itemRepository.update(id, {
       type: TypeEnum.COMPLETED,
@@ -96,6 +112,7 @@ export class ItemsService {
 
     const itemDB = await this.itemRepository.findOne({
       where: { id, status: StatusEnum.ACTIVE },
+      relations: ['owner'],
     });
 
     if (!itemDB || itemDB.type !== TypeEnum.PUBLISHED) {
@@ -106,13 +123,21 @@ export class ItemsService {
       throw new InternalServerErrorException('Item is expired');
     }
 
+    if (+itemDB.owner.id === +user.id) {
+      throw new InternalServerErrorException('You are owner of item');
+    }
+
     if (itemDB.currentPrice >= amount || amount < itemDB.startPrice) {
       throw new InternalServerErrorException('Current price must be higher than current price');
     }
 
-    const updateItem = await this.itemRepository.update(id, {
+    await this.itemRepository.update(id, {
       currentPrice: amount,
       owner: user,
+    });
+
+    const updateItem = await this.itemRepository.findOne({
+      where: { id, status: StatusEnum.ACTIVE },
     });
 
     this.eventEmitter.emit(EVENT.USER.UPDATE_AMOUNT, {
@@ -121,6 +146,6 @@ export class ItemsService {
       amount,
     });
 
-    return;
+    return updateItem;
   }
 }

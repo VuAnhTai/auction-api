@@ -32,15 +32,12 @@ export class User {
   password: string;
 
   @Column({ default: 0 })
-  @Exclude()
   amount: number;
 
   @CreateDateColumn()
-  @Exclude()
   createdAt: Date;
 
   @UpdateDateColumn()
-  @Exclude()
   udpatetAt: Date;
 
   @Column({ default: StatusEnum.ACTIVE })

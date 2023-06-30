@@ -12,6 +12,7 @@ export class BidGuard implements CanActivate {
 
     // Check if user has already bid on item within the last 5 seconds
     const key = `${user.id}-${itemId}`;
+    console.log(key);
     const canBid = await this.throttleUtil.tryAcquire(key);
     return canBid;
   }

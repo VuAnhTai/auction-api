@@ -6,6 +6,7 @@ import { History } from '../histories/history.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EVENT } from '@/common/constants';
 import { UserUpdateAmount } from '@/common/types/user';
+import { Item } from '../items/item.entity';
 
 @Injectable()
 export class UsersService {
@@ -41,9 +42,13 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async checkBalance(id: number) {
+  async checkBalance(id: number, amount: number) {
     const user = await this.userRepository.findOne({ where: { id } });
-    return user.amount;
+    if (user.amount < amount) {
+      throw new BadRequestException('Amount must be less than user amount');
+    }
+
+    return true;
   }
 
   async getProfile(id: number) {
@@ -55,16 +60,22 @@ export class UsersService {
     const { userId, amount, item } = payload;
     const user = await this.userRepository.findOne({ where: { id: userId } });
     const history = await this.historyRepository.findOne({
-      where: { userId: userId },
+      where: { userId: userId, itemId: item.id },
       order: { createdAt: 'DESC' },
     });
-    user.amount = user.amount - history.amount + amount;
+    let oldAmount = 0;
+    if (history) {
+      oldAmount = history.amount || 0;
+    }
 
-    const result = this.userRepository.save(user);
+    console.log(oldAmount);
+    user.amount = user.amount - +amount + oldAmount;
+
+    const result = await this.userRepository.save(user);
 
     this.eventEmitter.emit(EVENT.HISTORY.CREATED, {
       user: result,
-      amount: amount,
+      amount: +amount,
       item,
     });
 
@@ -75,8 +86,7 @@ export class UsersService {
     const { userId, amount, item } = payload;
     const user = await this.userRepository.findOne({ where: { id: userId } });
     user.amount = user.amount + amount;
-
-    const result = this.userRepository.save(user);
+    const result = await this.userRepository.save(user);
 
     this.eventEmitter.emit(EVENT.HISTORY.CREATED, {
       user: result,
