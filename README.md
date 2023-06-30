@@ -36,8 +36,22 @@ We use framework NESTJS
 
 ## Run With Docker Compose
 
+Start docker compose:
+
 ```bash
 docker-compose up -d
+```
+
+Build docker again:
+
+```bash
+docker-compose up -d --build
+```
+
+Stop docker compose:
+
+```bash
+docker-compose down
 ```
 
 ## Run Manually
